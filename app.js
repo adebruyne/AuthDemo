@@ -8,26 +8,23 @@ var User = require("./models/user");
 
 mongoose.connect("mongodb://localhost/auth_demo_app");
 
-
-
 var app = express();
 
 app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
-    require("express-session")({
-      secret: "Rusty is the best and cutest dog in the world",
-      resave: false,
-      saveUninitialized: false
-    })
-  );
+  require("express-session")({
+    secret: "Rusty is the best and cutest dog in the world",
+    resave: false,
+    saveUninitialized: false
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
 //Read the session, take the encoded data and deserialize it, and then can also serialize and put it back into the sessions
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-
 
 // ================ROUTES
 app.get("/", function(req, res) {
@@ -40,11 +37,27 @@ app.get("/secret", function(req, res) {
 
 //Auth Routes
 //show sign up form
-app.get('/register', function(req,res){
-    res.render("register");
-})
-
-
+app.get("/register", function(req, res) {
+  res.render("register");
+});
+//handle user signup
+app.post("/register", function(req, res) {
+  req.body.username;
+  req.body.password;
+  User.register(
+    new User({ username: req.body.username }),
+    req.body.password,
+    function(err, user) {
+      if (err) {
+        console.log(err);
+        return res.render("register");
+      }
+      passport.authenticate("local")(req, res, function() {
+        res.redirect("/secret");
+      });
+    }
+  );
+});
 
 app.listen(8889, () => {
   console.log("The  server has started!");
