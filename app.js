@@ -77,6 +77,12 @@ app.post(
   function(req, res) {}
 );
 
+//Lougout routes
+app.get("/logout", function(req, res) {
+  req.logout();
+  res.redirect("/");
+});
+
 app.listen(8889, () => {
   console.log("The  server has started!");
 });
