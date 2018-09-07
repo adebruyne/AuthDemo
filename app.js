@@ -23,6 +23,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Read the session, take the encoded data and deserialize it, and then can also serialize and put it back into the sessions
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
+// ================ROUTES
 app.get("/", function(req, res) {
   res.render("home");
 });
@@ -30,6 +37,14 @@ app.get("/", function(req, res) {
 app.get("/secret", function(req, res) {
   res.render("secret");
 });
+
+//Auth Routes
+//show sign up form
+app.get('/register', function(req,res){
+    res.render("register");
+})
+
+
 
 app.listen(8889, () => {
   console.log("The  server has started!");
