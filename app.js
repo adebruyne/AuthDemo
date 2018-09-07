@@ -22,6 +22,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+//create a new local strategy that comes from a method from passportLocalMongoose
+passport.use(new LocalStrategy(User.authenticate()));
+
 //Read the session, take the encoded data and deserialize it, and then can also serialize and put it back into the sessions
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -61,9 +64,18 @@ app.post("/register", function(req, res) {
 
 //LOGIN ROUTES
 // render login form
-app.get("/login", function(req,res){
-    res.render("login")
-})
+app.get("/login", function(req, res) {
+  res.render("login");
+});
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/secret",
+    failureRedirect: "/login"
+  }),
+  function(req, res) {}
+);
 
 app.listen(8889, () => {
   console.log("The  server has started!");
