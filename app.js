@@ -59,6 +59,12 @@ app.post("/register", function(req, res) {
   );
 });
 
+//LOGIN ROUTES
+// render login form
+app.get("/login", function(req,res){
+    res.render("login")
+})
+
 app.listen(8889, () => {
   console.log("The  server has started!");
 });
